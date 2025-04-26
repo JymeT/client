@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import { Activity, LogOut, PlusCircle, User } from 'lucide-react'
+import { Activity, LogOut, PlusCircle, User, Calendar, Bell } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Sidebar,
@@ -20,6 +20,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/context/authContext'
+import {
+  Wallet,
+  // CreditCard
+} from 'lucide-react'
+
 import { useEffect } from 'react'
 
 const DashboardLayout = () => {
@@ -55,6 +60,26 @@ const DashboardLayout = () => {
                   Dashboard
                 </Button>
               </Link>
+              <Link to="/transactions">
+                <Button variant="ghost" className="w-full justify-start">
+                  <Wallet size={16} className="mr-2" />
+                  Transactions
+                </Button>
+              </Link>
+              <Link to="/reminders">
+                <Button variant="ghost" className="w-full justify-start">
+                  <Calendar size={16} className="mr-2" />
+                  Reminders
+                </Button>
+              </Link>
+
+              <Link to="/notifications">
+                <Button variant="ghost" className="w-full justify-start">
+                  <Bell size={16} className="mr-2" />
+                  Notifications
+                </Button>
+              </Link>
+
               <Link to="/chat">
                 <Button variant="ghost" className="w-full justify-start">
                   <PlusCircle size={16} className="mr-2" />
@@ -76,7 +101,7 @@ const DashboardLayout = () => {
                     </div>
                   </Button>
                 </DropdownMenuTrigger>
-                
+
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />

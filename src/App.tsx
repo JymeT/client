@@ -1,12 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Login from './components/auth/login'
 import Register from './components/auth/register'
-import Temp from './pages/Temp'
 import Dashboard from './pages/Dashboard'
 import NotFound from './pages/NotFound'
 import DashboardLayout from './layouts/DashboardLayout'
 import ChatbotPage from './pages/Chat'
 import Landing from './pages/Landing'
+import ExpensesPage from './pages/Expenses'
+import RemindersPage from './pages/Reminders'
+import NotificationsPage from './pages/Notifications'
+
 function App() {
   return (
     <Router>
@@ -20,7 +23,9 @@ function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/chat" element={<ChatbotPage />} />
-          <Route path="/temp" element={<Temp />} />
+          <Route path="/transactions" element={<ExpensesPage />} />
+          <Route path="/reminders" element={<RemindersPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
