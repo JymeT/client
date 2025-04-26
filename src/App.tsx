@@ -7,6 +7,8 @@ import NotFound from './pages/NotFound'
 import DashboardLayout from './layouts/DashboardLayout'
 import ChatbotPage from './pages/Chat'
 import Landing from './pages/Landing'
+import NotificationPage from './pages/NotificationPage'
+import RemindersPage from './pages/Reminders'
 function App() {
   return (
     <Router>
@@ -15,6 +17,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Landing />} />
+        <Route path="/notification" element={<NotificationPage />} />
+        <Route path="/reminder" element={<RemindersPage />} />
+
+        {/* Redirect from /home to /dashboard */}
 
         {/* Protected routes */}
         <Route element={<DashboardLayout />}>
