@@ -1,34 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
 const ScrollToTopButton = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false)
 
   // Show button when page is scrolled down
   const toggleVisibility = () => {
     if (window.scrollY > 300) {
-      setIsVisible(true);
+      setIsVisible(true)
     } else {
-      setIsVisible(false);
+      setIsVisible(false)
     }
-  };
+  }
 
   // Set the scroll to top
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
-    });
-  };
+      behavior: 'smooth',
+    })
+  }
 
   useEffect(() => {
-    window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
-  }, []);
+    window.addEventListener('scroll', toggleVisibility)
+    return () => window.removeEventListener('scroll', toggleVisibility)
+  }, [])
 
   return (
     <button
-      className={`fixed bottom-6 right-6 p-3 rounded-full bg-finflow-blue text-white shadow-lg transition-opacity duration-300 hover:bg-blue-700 z-50 ${
-        isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+      className={`fixed bottom-6 right-6 p-3 rounded-full bg-finflow-blue text-black hover:text-white cursor-pointer shadow-lg transition-opacity duration-300 hover:bg-blue-700 z-50 ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
       onClick={scrollToTop}
       aria-label="Scroll to top"
@@ -37,7 +37,7 @@ const ScrollToTopButton = () => {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
       </svg>
     </button>
-  );
-};
+  )
+}
 
-export default ScrollToTopButton;
+export default ScrollToTopButton
