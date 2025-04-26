@@ -1,51 +1,43 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  PiggyBank, 
-  Target, 
-  ChartBar, 
-  ChartPie, 
-  Calendar, 
-  FileChartLine 
-} from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ChartBar, ChartPie, FileChartLine, BellDot, Bot } from 'lucide-react'
 
 const features = [
   {
-    title: "Budget Management",
-    description: "Create customized budgets for different spending categories and track your progress in real-time.",
-    icon: PiggyBank,
-    color: "bg-blue-100 text-finflow-blue"
-  },
-  {
-    title: "Expense Tracking",
-    description: "Automatically categorize transactions and visualize your spending patterns with intuitive charts.",
+    title: 'Expense Tracking',
+    description:
+      'Easily track every expense and income source through detailed tables categorized by type — groceries, salary, entertainment, bills, and more.',
     icon: ChartPie,
-    color: "bg-teal-100 text-finflow-teal"
+    color: 'bg-teal-100 text-finflow-teal',
   },
   {
-    title: "Financial Goals",
-    description: "Set short and long-term financial goals with detailed planning and milestone tracking.",
-    icon: Target,
-    color: "bg-amber-100 text-finflow-amber"
-  },
-  {
-    title: "Investment Tracking",
-    description: "Monitor your investments, track performance, and analyze returns all in one place.",
+    title: 'Interactive Spending Charts',
+    description:
+      'Visualize where your money goes with intuitive charts and graphs — making it easy to spot trends, overspending, and saving opportunities.',
     icon: ChartBar,
-    color: "bg-purple-100 text-purple-600"
+    color: 'bg-purple-100 text-purple-600',
   },
   {
-    title: "Bill Reminders",
-    description: "Never miss a payment with automated reminders and scheduled payment tracking.",
-    icon: Calendar,
-    color: "bg-red-100 text-red-600"
+    title: 'Bill Reminders',
+    description:
+      'Never miss a payment again. Get automated notifications for upcoming bills like subscriptions, utilities, or rent.',
+    icon: BellDot,
+    color: 'bg-red-100 text-red-600',
   },
   {
-    title: "Financial Reports",
-    description: "Generate comprehensive reports to gain insights into your financial health and progress.",
+    title: 'Chatbot-Powered Expense Logging',
+    description:
+      'Log new expenses, income, and bill payments quickly through an intuitive AI chatbot — no complicated forms.',
+    icon: Bot,
+    color: 'bg-green-100 text-green-600',
+  },
+  {
+    title: 'Centralized Bill Payments',
+    description:
+      'Pay Vodafone, Orange, Fawry, and more — all in one place without switching apps, using our integrated chatbot.',
     icon: FileChartLine,
-    color: "bg-green-100 text-green-600"
-  }
-];
+    color: 'bg-green-100 text-green-600',
+  },
+]
 
 const FeaturesSection = () => {
   return (
@@ -57,7 +49,7 @@ const FeaturesSection = () => {
             Our comprehensive suite of tools helps you manage every aspect of your financial life.
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
@@ -75,7 +67,7 @@ const FeaturesSection = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default FeaturesSection;
+export default FeaturesSection
