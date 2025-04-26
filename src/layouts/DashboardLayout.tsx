@@ -47,9 +47,10 @@ const DashboardLayout = () => {
       <div className="min-h-screen flex w-full">
         <Sidebar>
           <SidebarHeader>
-            <div className="flex items-center space-x-2 px-2 pt-4 pb-2">
+            <div className="flex items-center space-x-2 px-2 pt-4 pb-2 text-2xl font-bold text-finflow-blue ">
               <Activity className="h-6 w-6 text-indigo-600" />
-              <h1 className="text-xl font-semibold text-indigo-600">Keep Alive</h1>
+              <span>FM</span>
+              <span className="text-sm font-normal text-gray-500">powered by AI</span>
             </div>
           </SidebarHeader>
           <SidebarContent>
