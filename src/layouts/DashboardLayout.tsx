@@ -55,10 +55,10 @@ const DashboardLayout = () => {
                   Dashboard
                 </Button>
               </Link>
-              <Link to="/monitors/new">
+              <Link to="/chat">
                 <Button variant="ghost" className="w-full justify-start">
                   <PlusCircle size={16} className="mr-2" />
-                  New Monitor
+                  Chat
                 </Button>
               </Link>
             </div>
@@ -72,7 +72,7 @@ const DashboardLayout = () => {
                       <Avatar className="h-6 w-6">
                         <User className="h-6 w-6" />
                       </Avatar>
-                      <span className="truncate">{user?.username}</span>
+                      <span className="truncate">{user?.name}</span>
                     </div>
                   </Button>
                 </DropdownMenuTrigger>

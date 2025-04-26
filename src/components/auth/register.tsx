@@ -1,100 +1,111 @@
-import { useState } from 'react';
-import { useAuth } from '../../context/authContext';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { AxiosError } from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { useAuth } from '../../context/authContext'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { AxiosError } from 'axios'
+import { useNavigate } from 'react-router-dom'
 
-const registerSchema = z.object({
-  username: z.string()
-    .min(3, { message: "Username must be at least 3 characters" })
-    .max(50, { message: "Username must be less than 50 characters" }),
-  email: z.string()
-    .email({ message: "Please enter a valid email address" }),
-  password: z.string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .max(100, { message: "Password must be less than 100 characters" }),
-  password2: z.string()
-}).refine(data => data.password === data.password2, {
-  message: "Passwords don't match",
-  path: ["password2"]
-});
+const registerSchema = z
+  .object({
+    username: z
+      .string()
+      .min(3, { message: 'Username must be at least 3 characters' })
+      .max(50, { message: 'Username must be less than 50 characters' }),
+    email: z.string().email({ message: 'Please enter a valid email address' }),
+    phone: z
+      .string()
+      .min(10, { message: 'Phone number must be at least 10 characters' })
+      .max(15, { message: 'Phone number must be less than 15 characters' }),
+    password: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters' })
+      .max(100, { message: 'Password must be less than 100 characters' }),
+    password2: z.string(),
+  })
+  .refine((data) => data.password === data.password2, {
+    message: "Passwords don't match",
+    path: ['password2'],
+  })
 
-type RegisterInputs = z.infer<typeof registerSchema>;
+type RegisterInputs = z.infer<typeof registerSchema>
 
 const Register = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { register: registerUser } = useAuth();
-  const navigate = useNavigate();
-  const { 
-    register, 
-    handleSubmit, 
+  const [isLoading, setIsLoading] = useState(false)
+  const { register: registerUser } = useAuth()
+  const navigate = useNavigate()
+  const {
+    register,
+    handleSubmit,
     formState: { errors },
     setError,
-    clearErrors
+    clearErrors,
   } = useForm<RegisterInputs & { root?: { serverError?: string } }>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       username: '',
       email: '',
       password: '',
-      password2: ''
-    }
-  });
+      password2: '',
+      phone: '',
+    },
+  })
 
   const onSubmit = async (data: RegisterInputs) => {
-    setIsLoading(true);
-    clearErrors('root.serverError');
-    
+    setIsLoading(true)
+    clearErrors('root.serverError')
+
     try {
-      await registerUser(data.username, data.email, data.password);
-      navigate('/login');
+      console.log({
+        data,
+      })
+      await registerUser(data.username, data.email, data.password, data.phone)
+      navigate('/login')
     } catch (err) {
-      console.error(err);
-      
+      console.error(err)
+
       if (err instanceof AxiosError) {
-        const errors = err.response?.data;
-        
+        const errors = err.response?.data
+
         if (errors.username) {
-          setError('username', { type: 'server', message: errors.username[0] });
-        } else if (errors.email) {
-          setError('email', { type: 'server', message: errors.email[0] });
-        } else if (errors.password) {
-          setError('password', { type: 'server', message: errors.password[0] });
+          setError('username', { type: 'server', message: errors.username[0] })
+        } else if (errors.detail.includes('Email')) {
+          setError('email', { type: 'server', message: errors.detail })
+        } else if (errors.detail.includes('Password')) {
+          setError('password', { type: 'server', message: errors.detail })
+        } else if (errors.detail.includes('Phone')) {
+          setError('phone', { type: 'server', message: errors.detail })
         } else {
-          setError('root.serverError', { 
-            type: 'server', 
-            message: 'An unexpected error occurred. Please try again.' 
-          });
+          setError('root.serverError', {
+            type: 'server',
+            message: 'An unexpected error occurred. Please try again.',
+          })
         }
       } else {
-        setError('root.serverError', { 
-          type: 'server', 
-          message: 'An unexpected error occurred. Please try again.' 
-        });
+        setError('root.serverError', {
+          type: 'server',
+          message: 'An unexpected error occurred. Please try again.',
+        })
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Create an account</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Join us today and start your journey
-          </p>
+          <p className="mt-2 text-sm text-gray-600">Join us today and start your journey</p>
         </div>
-        
+
         {errors.root?.serverError && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-md">
             <p className="text-sm text-red-600">{errors.root.serverError.message}</p>
           </div>
         )}
-        
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <div>
@@ -105,14 +116,14 @@ const Register = () => {
                 id="username"
                 type="text"
                 placeholder="Enter your username"
-                className={`mt-1 block w-full px-3 py-2 border ${errors.username ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                {...register("username")}
+                className={`mt-1 block w-full px-3 py-2 border ${
+                  errors.username ? 'border-red-500' : 'border-gray-300'
+                } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+                {...register('username')}
               />
-              {errors.username && (
-                <p className="mt-1 text-sm text-red-600">{errors.username.message}</p>
-              )}
+              {errors.username && <p className="mt-1 text-sm text-red-600">{errors.username.message}</p>}
             </div>
-            
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
@@ -121,14 +132,30 @@ const Register = () => {
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                className={`mt-1 block w-full px-3 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                {...register("email")}
+                className={`mt-1 block w-full px-3 py-2 border ${
+                  errors.email ? 'border-red-500' : 'border-gray-300'
+                } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+                {...register('email')}
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
             </div>
-            
+
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Mobile Number
+              </label>
+              <input
+                id="phone"
+                type="tel"
+                placeholder="Enter your mobile number"
+                className={`mt-1 block w-full px-3 py-2 border ${
+                  errors.phone ? 'border-red-500' : 'border-gray-300'
+                } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+                {...register('phone')}
+              />
+              {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>}
+            </div>
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -137,14 +164,14 @@ const Register = () => {
                 id="password"
                 type="password"
                 placeholder="Create a password"
-                className={`mt-1 block w-full px-3 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                {...register("password")}
+                className={`mt-1 block w-full px-3 py-2 border ${
+                  errors.password ? 'border-red-500' : 'border-gray-300'
+                } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+                {...register('password')}
               />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
-              )}
+              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
             </div>
-            
+
             <div>
               <label htmlFor="password2" className="block text-sm font-medium text-gray-700">
                 Confirm Password
@@ -153,12 +180,12 @@ const Register = () => {
                 id="password2"
                 type="password"
                 placeholder="Confirm your password"
-                className={`mt-1 block w-full px-3 py-2 border ${errors.password2 ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
-                {...register("password2")}
+                className={`mt-1 block w-full px-3 py-2 border ${
+                  errors.password2 ? 'border-red-500' : 'border-gray-300'
+                } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+                {...register('password2')}
               />
-              {errors.password2 && (
-                <p className="mt-1 text-sm text-red-600">{errors.password2.message}</p>
-              )}
+              {errors.password2 && <p className="mt-1 text-sm text-red-600">{errors.password2.message}</p>}
             </div>
           </div>
 
@@ -171,10 +198,10 @@ const Register = () => {
               {isLoading ? 'Registering...' : 'Register'}
             </button>
           </div>
-          
+
           <div className="text-center text-sm">
             <p className="text-gray-600">
-              Already have an account?{" "}
+              Already have an account?{' '}
               <a href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
                 Sign in
               </a>
@@ -183,7 +210,7 @@ const Register = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register

@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { AxiosError } from 'axios'
+import { toast } from 'sonner'
 
 const loginSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),
@@ -33,6 +34,8 @@ const Login = () => {
   })
 
   useEffect(() => {
+    console.log('user', user)
+
     if (user) {
       navigate('/dashboard')
     }
@@ -44,9 +47,13 @@ const Login = () => {
 
     try {
       await login(data.username, data.password)
+      toast.success('Login successful')
     } catch (err) {
+      console.log('errorData', err);
+      
       if (err instanceof AxiosError) {
         const errorData = err.response?.data
+
 
         if (errorData?.detail) {
           setError('root.serverError', {

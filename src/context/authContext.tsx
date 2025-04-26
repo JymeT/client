@@ -3,16 +3,18 @@ import { AxiosError } from 'axios'
 import axios from '../lib/axios'
 
 type User = {
-  id: number
-  username: string
+  name: string
   email: string
+  phone: string
+  id: number
+  is_active: boolean
 }
 
 type AuthContextType = {
   user: User | null
   loading: boolean
   login: (username: string, password: string) => Promise<void>
-  register: (username: string, email: string, password: string) => Promise<void>
+  register: (username: string, email: string, password: string, phone: string) => Promise<void>
   logout: () => void
 }
 
@@ -27,7 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const token = localStorage.getItem('access_token')
       if (token) {
         try {
-          const res = await axios.get<User>('/user/')
+          const res = await axios.get<User>('/users/me')
           setUser(res.data)
         } catch (err) {
           if (err instanceof AxiosError && err.response?.status === 401) {
@@ -41,19 +43,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   const login = async (username: string, password: string) => {
-    const res = await axios.post<{ access: string; refresh: string }>('/token/', {
-      username,
-      password,
+    const formData = new FormData()
+    formData.append('username', username)
+    formData.append('password', password)
+
+    const res = await axios.post<{ access_token: string }>('/auth/login', formData)
+
+    console.log({
+      res,
     })
-    localStorage.setItem('access_token', res.data.access)
-    localStorage.setItem('refresh_token', res.data.refresh)
-    const userRes = await axios.get<User>('/user/')
+
+    localStorage.setItem('access_token', res.data.access_token)
+    const userRes = await axios.get<User>('/users/me', {
+      headers: {
+        Authorization: `Bearer ${res.data.access_token}`,
+      },
+    })
+    console.log({
+      userRes,
+    });
+    
     setUser(userRes.data)
   }
 
-  const register = async (username: string, email: string, password: string) => {
-    await axios.post('/register/', { username, email, password })
-    await login(username, password)
+  const register = async (username: string, email: string, password: string, phone: string) => {
+    await axios.post('/users', { name: username, email: email, password: password, phone: phone })
+    // await login(email, password)
   }
 
   const logout = () => {
